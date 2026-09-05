@@ -1,4 +1,3 @@
-````markdown
 # ⚡ Personalized AI Ad Bidding System
 
 A **Reinforcement Learning-based Real-Time Bidding (RTB) system** that uses a **Deep Q-Network (DQN)** to learn adaptive advertising bidding decisions.
@@ -240,6 +239,3 @@ python app.py
 ## 📄 License
 
 This project is licensed under the **MIT License**.
-
-```
-```

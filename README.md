@@ -1,143 +1,135 @@
+````markdown
 # ⚡ Personalized AI Ad Bidding System
 
+A **Reinforcement Learning-based Real-Time Bidding (RTB) system** that uses a **Deep Q-Network (DQN)** to learn adaptive advertising bidding decisions.
+
+The project combines **data simulation, feature engineering, machine learning, reinforcement learning, auction simulation, evaluation, and interactive dashboards**.
+
 ![Python](https://img.shields.io/badge/Python-3.10%2B-blue?logo=python)
-![PyTorch](https://img.shields.io/badge/PyTorch-Deep%20Learning-EE4C2C?logo=pytorch)
+![PyTorch](https://img.shields.io/badge/PyTorch-DQN-EE4C2C?logo=pytorch)
 ![Streamlit](https://img.shields.io/badge/Streamlit-Dashboard-FF4B4B?logo=streamlit)
-![FastAPI](https://img.shields.io/badge/FastAPI-Web--API-009688?logo=fastapi)
+![Flask](https://img.shields.io/badge/Flask-Web_App-black?logo=flask)
 ![License](https://img.shields.io/badge/License-MIT-green)
 
-A Reinforcement Learning-based Real-Time Bidding (RTB) system that uses a Deep Q-Network (DQN) to learn intelligent and personalized advertising bidding decisions.
+---
 
-The system simulates real-time advertising auctions, allows an RL agent to learn from auction outcomes, and provides an interactive Streamlit dashboard for monitoring model learning, bidding behavior, rewards, CTR, ROI, and auction performance.
+## 🚀 Key Features
+
+- 🧠 Deep Q-Network (DQN) for adaptive bidding
+- 🎯 State-aware advertising decisions
+- 🔄 Experience Replay
+- 📉 Epsilon-Greedy exploration
+- ⚡ Real-time auction simulation
+- 📊 Interactive Streamlit monitoring dashboard
+- 🌐 Flask web application
+- 📈 CTR, ROI, revenue, reward, and win-rate analytics
+- 💾 PyTorch model saving and loading
+- 📁 Auction and evaluation result generation
 
 ---
 
-## 🚀 Overview
-
-In real-time advertising, advertisers must decide how much to bid for each individual ad impression within milliseconds. A bidding strategy that bids too aggressively can waste the advertising budget, while bidding too conservatively can result in missed opportunities.
-
-This project explores the use of Deep Reinforcement Learning to dynamically learn bidding decisions based on the current advertising environment.
-
-### Iterative Learning Cycle
-1. **Observe State:** Captures the current environment state.
-2. **Select Action:** Selects a bidding action via an epsilon-greedy policy.
-3. **Auction Execution:** Participates in a simulated real-time auction.
-4. **Environment Feedback:** Receives a reward based on the auction outcome and ad interaction (click vs. no click).
-5. **Experience Replay:** Stores the experience tuple `(s, a, r, s', done)` in replay memory.
-6. **Mini-Batch Sampling:** Samples random mini-batches from memory to break sample correlation.
-7. **Gradient Step:** Updates the neural network weights via Q-learning gradient steps.
-8. **Policy Optimization:** Gradually optimizes its policy toward high ROI and CTR.
-
----
-
-## 🎯 Project Objective
-
-The primary objective is to build an intelligent bidding system that can learn **when and how aggressively to bid** instead of relying entirely on manually defined bidding rules.
-
-The project combines **Reinforcement Learning + Deep Learning + Real-Time Bidding + Simulation + Interactive Visualization**.
-
----
-
-## ✨ Key Features
-
-* 🧠 **Deep Q-Network (DQN):** Dynamically estimates expected future rewards for discrete bidding actions.
-* 🎯 **State-Aware Bidding:** Personalizes bid amounts according to user attributes and environment signals.
-* 🔄 **Experience Replay & Epsilon Decay:** Ensures stable offline training and balances exploration vs. exploitation.
-* ⚡ **Live Auction Simulation:** Simulates multi-bidder, second-price (or first-price) auction environments in real time.
-* 📊 **Streamlit Monitoring Suite:** Provides live visual tracking of revenue, total reward, loss curves, and epsilon decay.
-* 👥 **Bidder Analytics:** Tracks win rates and return-on-ad-spend across individual bidding agents.
-* 💾 **Model Persistence:** Easily save and reload trained PyTorch model weights (`.pth`).
-
----
-
-## 🏗️ Detailed System Architecture
-
-The architecture is divided into three primary layers: the **Simulation Environment**, the **Intelligence Engine (DQN)**, and the **Application Interface**.
+## 🏗️ System Architecture
 
 ```text
-                         ┌──────────────────────────────────────────┐
-                         │           Application Interface          │
-                         │  (Streamlit Dashboard / FastAPI Endpoints)│
-                         └──────┬────────────────────────────▲──────┘
-                                │ Config / Actions           │ Metrics & Logs
-                                ▼                            │
- ┌──────────────────────────────────────────────────────────────────┐
- │                       Intelligence Engine (DQN)                  │
- │                                                                  │
- │  ┌─────────────────┐      ┌─────────────────┐     ┌───────────┐  │
- │  │ Epsilon-Greedy  │◄────►│   Q-Network     │◄───►│ Target    │  │
- │  │ Action Selector │      │ (PyTorch Model) │     │ Network   │  │
- │  └───────┬─────────┘      └────────▲────────┘     └───────────┘  │
- │          │                         │                             │
- │          │                         │ Batch Update                │
- │          ▼                         ▼                             │
- │  ┌─────────────────┐      ┌─────────────────┐                    │
- │  │   Bid Action    │      │  Replay Memory  │◄──(s,a,r,s',d)───┐ │
- │  └───────┬─────────┘      └─────────────────┘                  │ │
- └──────────┼─────────────────────────────────────────────────────┼─┘
-            │ Execute Bid                                         │
-            ▼                                                     │ Store Experience
- ┌────────────────────────────────────────────────────────────────┼─┐
- │                   RTB Simulation Environment                   │ │
- │                                                                │ │
- │  ┌────────────────┐     ┌─────────────────┐     ┌────────────┐ │ │
- │  │ State Generator│────►│ Second-Price    │────►│ Click/CTR  │ │ │
- │  │ (User/Ad Feats)│     │ Auction Engine  │     │ Simulator  │ │ │
- │  └────────────────┘     └─────────────────┘     └──────┬─────┘ │ │
- │                                                        │       │ │
- │                                  ┌─────────────────────▼──────┐│ │
- │                                  │ Reward Calculator Function ├┘ │
- │                                  └────────────────────────────┘  │
- └──────────────────────────────────────────────────────────────────┘
+Advertising Data
+       │
+       ▼
+Data Simulation
+       │
+       ▼
+Feature Engineering
+       │
+   ┌───┴────────────┐
+   ▼                ▼
+ML Models      RL Environment
+                    │
+                    ▼
+                DQN Agent
+                    │
+                    ▼
+              Bidding Engine
+                    │
+                    ▼
+               RTB Auction
+                    │
+                    ▼
+              Reward / Outcome
+                    │
+                    ▼
+                Evaluation
+                    │
+              ┌─────┴─────┐
+              ▼           ▼
+         Streamlit      Flask
+         Dashboard     Web App
+````
 
+---
+
+## 🧠 Reinforcement Learning
+
+The DQN agent learns bidding decisions through repeated interaction with the simulated RTB environment.
+
+### Learning Cycle
+
+```text
+State
+  ↓
+Select Action
+  ↓
+Generate Bid
+  ↓
+Auction
+  ↓
+Reward
+  ↓
+Replay Memory
+  ↓
+DQN Training
+  ↓
+Improved Policy
 ```
 
-### Layer Breakdown
+### DQN Components
 
-* **RTB Simulation Environment:** Acts as the Supply-Side Platform (SSP) and Ad Exchange. It generates user profiles, sets floor prices, simulates competitor bids, executes second-price auction logic, and probabilistically determines if a won ad is clicked based on underlying CTR models.
-* **Intelligence Engine:** Acts as the Demand-Side Platform (DSP). It utilizes a dual-network architecture (Primary and Target networks) to stabilize learning. The Replay Memory buffer breaks the correlation between sequential auction states.
-* **Application Interface:** Translates the underlying tensor operations and environment states into human-readable charts, metrics, and manual bidding overrides.
+| Component     | Description                                  |
+| ------------- | -------------------------------------------- |
+| State         | Advertising and user environment information |
+| Action        | Discrete bidding decision                    |
+| Reward        | Feedback based on auction outcome            |
+| Replay Memory | Stores previous experiences                  |
+| Epsilon       | Controls exploration vs. exploitation        |
 
----
+### Experience Format
 
-## 🧠 Reinforcement Learning Formulation
-
-The DQN models the optimal action-value function `Q*(s, a)` representing the maximum expected future reward attainable by taking action `a` in state `s`.
-
-### State Space (`s`)
-
-The state is a normalized real-time context vector fed into the input layer of the PyTorch model. It typically includes:
-
-* **User Demographics:** Age group, gender, device type, location.
-* **Contextual Features:** Publisher category, time of day, ad format.
-* **Agent Context:** Remaining budget pacing, historical CTR for similar profiles.
-
-### Action Space (`a`)
-
-Determines the bid intensity or discrete action selected by the agent:
-
-* **Action 0:** `Bid 0` (Skip Auction)
-* **Action 1:** `Bid Base` (Conservative)
-* **Action 2:** `Bid 2x` (Moderate)
-* **Action 3:** `Bid 5x` (Aggressive - Premium Context)
-
-### Reward Function (`r`)
-
-Calculated post-auction based on win status, impression cost (second-highest bid), and user response (simulated click):
-
-* **If Auction Won & User Clicks:** `Conversion Value - Clearing Price`
-* **If Auction Won & No Click:** `- Clearing Price`
-* **If Auction Lost:** `0`
+```text
+(state, action, reward, next_state, done)
+```
 
 ---
 
-## ⚖️ Auction Mechanics (Second-Price)
+## 📊 Dashboard
 
-The environment simulates a Vickrey (Second-Price) auction:
+The Streamlit dashboard provides monitoring and analysis of:
 
-1. **Bid Collection:** The DQN agent submits its bid alongside `N` simulated competitors.
-2. **Winner Determination:** The highest bidder wins the impression.
-3. **Clearing Price:** The winner pays the second-highest bid amount plus a nominal increment (e.g., +$0.01), or the base floor price if no other valid bids exist.
+| Metric      | Purpose                            |
+| ----------- | ---------------------------------- |
+| 💰 Revenue  | Advertising revenue                |
+| 📈 ROI      | Return on advertising spend        |
+| 🎯 CTR      | Click-through rate                 |
+| 🧠 Reward   | Reinforcement learning performance |
+| 🏆 Win Rate | Auction success rate               |
+| 📉 Loss     | DQN training performance           |
+| 📉 Epsilon  | Exploration level                  |
+
+### Dashboard Modules
+
+* ⚡ Live Auction
+* 🧠 DQN Console
+* 📈 Performance Trends
+* 📊 Bidder Analytics
+* 👤 User Personalization
+* 🤖 Model Performance
 
 ---
 
@@ -146,35 +138,38 @@ The environment simulates a Vickrey (Second-Price) auction:
 ```text
 RL_AD/
 │
-├── dashboard.py           # Streamlit application entry point
+├── app.py
+├── dashboard.py
+├── bidding_engine.py
+├── data_simulator.py
+├── feature_engineering.py
+├── model_trainer.py
+├── evaluation.py
+├── main.py
 │
 ├── engine/
-│   ├── __init__.py
-│   ├── agent.py           # PyTorch Neural Network, DQN Logic & Replay Buffer
-│   └── environment.py     # Custom Gymnasium-style RTB simulator
+│   ├── agent.py
+│   └── environment.py
 │
-├── data/                  # Simulated Criteo-style impression logs
-├── models/                # Saved CTR models and preprocessors
-├── outputs/               # Metric logs, charts, and campaign visual assets
+├── data/
+│   └── criteo_sample.tsv
 │
-├── .gitignore
+├── models/
+├── outputs/
+│   ├── auction_results.csv
+│   └── metrics_summary.csv
+│
+├── static/
+│   ├── script.js
+│   └── style.css
+│
+├── templates/
+│   └── index.html
+│
+├── ad_agent.pth
 ├── requirements.txt
 └── README.md
-
 ```
-
----
-
-## 🖥️ Interactive Dashboard Features
-
-| Section | Description |
-| --- | --- |
-| **⚡ Global Metrics** | Live snapshot of Total Revenue, ROI %, CTR %, Cumulative Reward, and Epsilon |
-| **🎯 Active Campaign** | Displays visual asset and configuration for current simulated campaign |
-| **🧠 DQN Console** | Model health status, current learning rate, and batch update logs |
-| **📈 Learning Curves** | Real-time Plotly charts tracking Reward trends, Loss reduction, and Epsilon decay |
-| **🏷️ Live Auction** | Step-by-step manual execution of single auctions to observe agent actions |
-| **👥 Bidder Analytics** | Multi-agent comparative performance matrix and share-of-voice charts |
 
 ---
 
@@ -183,68 +178,68 @@ RL_AD/
 ### 1. Clone the Repository
 
 ```bash
-git clone [https://github.com/your-username/RL_AD.git](https://github.com/your-username/RL_AD.git)
-cd RL_AD
-
+git clone https://github.com/luckyjain04/RL_AD_BIDDING_SYSTEM.git
+cd RL_AD_BIDDING_SYSTEM
 ```
 
-### 2. Set Up Virtual Environment
-
-**Windows (PowerShell):**
-
-```powershell
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-
-```
-
-**macOS / Linux:**
+### 2. Create a Virtual Environment
 
 ```bash
-python3 -m venv .venv
-source .venv/bin/activate
-
+python -m venv .venv
 ```
 
-### 3. Install Requirements
+### 3. Activate on Windows
+
+```powershell
+.venv\Scripts\Activate.ps1
+```
+
+### 4. Install Dependencies
 
 ```bash
 pip install -r requirements.txt
-
 ```
 
-### 4. Run the Dashboard
+### 5. Run the Streamlit Dashboard
 
 ```bash
 streamlit run dashboard.py
+```
 
+### 6. Run the Flask Web Application
+
+```bash
+python app.py
 ```
 
 ---
 
 ## 🛠️ Tech Stack
 
-* **Language:** Python 3.10+
-* **Deep Learning Framework:** PyTorch
-* **Interactive UI:** Streamlit, FastAPI
-* **Data Visualization:** Plotly, Matplotlib, Seaborn
-* **Environment & Mathematics:** NumPy, Pandas, Scikit-Learn, Gymnasium
+**Python • PyTorch • Streamlit • Flask • Pandas • NumPy • Scikit-learn • Plotly • HTML • CSS • JavaScript**
 
 ---
 
-## 🏁 Future Enhancements
+## 🔮 Future Improvements
 
-* [ ] Transition from discrete actions to **Continuous Action Spaces** using DDPG or Soft Actor-Critic (SAC).
-* [ ] Implement **Budget-Constrained RTB** (Safety Layer to prevent early budget depletion through constrained MDPs).
-* [ ] Support **Multi-Agent Competitive Auctions** where multiple independent DQN networks bid against each other.
-* [ ] Integration with real-world RTB datasets like **iPinYou** or **Yandex Real-Time Bidding** to train on historical bid landscapes.
+* Continuous-action bidding using DDPG / SAC
+* Budget-constrained reinforcement learning
+* Multi-agent competitive bidding
+* Larger real-world RTB datasets
+* Online learning from streaming auction data
+* Cloud deployment
+
+---
+
+## 📌 Learning Outcomes
+
+**Deep Reinforcement Learning • DQN • PyTorch • Experience Replay • Epsilon-Greedy • Real-Time Bidding • Auction Simulation • Feature Engineering • Machine Learning • Model Evaluation • Streamlit • Flask**
 
 ---
 
 ## 📄 License
 
-Distributed under the **MIT License**. See `LICENSE` for more information.
+This project is licensed under the **MIT License**.
 
 ```
-
 ```

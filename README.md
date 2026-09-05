@@ -1,151 +1,270 @@
-# ⚡ Personalized Ad Bidding System
+# ⚡ Personalized AI Ad Bidding System
 
-A full-stack machine learning pipeline for **real-time ad bidding (RTB)** built
-on the [Criteo 1TB Click Logs dataset](https://ailab.criteo.com/download-criteo-1tb-click-logs-dataset/).
+A **Reinforcement Learning-based Real-Time Bidding (RTB) system** that uses a **Deep Q-Network (DQN)** to learn intelligent and personalized advertising bidding decisions.
+
+The system simulates real-time ad auctions, trains an RL agent through interaction with the environment, and provides an interactive **Streamlit dashboard** to visualize bidding performance, rewards, CTR, ROI, exploration, and auction activity.
 
 ---
 
-## 📁 Project Structure
+## 🚀 Project Highlights
 
-```
-ad_bidding_system/
-├── data_simulator.py        # Simulate or load real Criteo TSV data
-├── feature_engineering.py   # Preprocessing + feature pipeline
-├── model_trainer.py         # LR / DecTree / RF / LightGBM training
-├── bidding_engine.py        # 5 bidding strategies + auction engine
-├── evaluation.py            # Metrics + Matplotlib report charts
-├── main.py                  # End-to-end CLI pipeline runner
-├── dashboard.py             # Streamlit interactive dashboard
+- 🧠 Deep Q-Network (DQN) based bidding agent
+- 🎯 Personalized bidding decisions
+- 💰 Real-time ad auction simulation
+- 📈 Reward-based reinforcement learning
+- ⚡ Live auction simulation
+- 📊 Interactive Streamlit dashboard
+- 📉 Reward and epsilon-decay visualization
+- 👥 Bidder performance analytics
+- 💾 DQN model saving and loading
+- 🖼️ Active advertising campaign visualization
+
+---
+
+## 🏗️ System Architecture
+
+```text
+                    USER / AD STATE
+                          │
+                          ▼
+                ┌───────────────────┐
+                │   RTB Environment │
+                └─────────┬─────────┘
+                          │
+                          ▼
+                   CURRENT STATE
+                          │
+                          ▼
+                ┌───────────────────┐
+                │     DQN Agent     │
+                │                   │
+                │   Neural Network  │
+                └─────────┬─────────┘
+                          │
+                          ▼
+                    BID ACTION
+                          │
+                          ▼
+                ┌───────────────────┐
+                │    AD AUCTION     │
+                └─────────┬─────────┘
+                          │
+                          ▼
+                    AUCTION RESULT
+                          │
+                          ▼
+                      REWARD
+                          │
+                          ▼
+                ┌───────────────────┐
+                │  Replay Memory    │
+                └─────────┬─────────┘
+                          │
+                          ▼
+                    DQN TRAINING
+                          │
+                          ▼
+                IMPROVED BID POLICY
+🧠 Reinforcement Learning
+
+The project uses Deep Q-Learning to learn bidding decisions.
+
+The DQN agent observes the current advertising environment and selects an action using an epsilon-greedy policy.
+
+State
+
+The environment provides the current state representing the advertising opportunity and auction conditions.
+
+Action
+
+The DQN selects a bidding action from the available action space.
+
+The dashboard represents the available actions as simulated bidders:
+
+Action 0 → Bidder-1
+Action 1 → Bidder-2
+Action 2 → Bidder-3
+Action 3 → Bidder-4
+Reward
+
+After an auction, the environment returns a reward based on the outcome of the bidding decision.
+
+The experience is stored as:
+
+(state, action, reward, next_state, done)
+
+The DQN learns from these experiences using experience replay.
+
+📉 Epsilon-Greedy Exploration
+
+At the beginning of training, the agent has a high exploration rate.
+
+Epsilon = 1.0
+
+This allows the agent to explore different bidding actions.
+
+As training progresses, epsilon decreases and the agent increasingly relies on its learned policy.
+
+High Exploration
+       ↓
+Auction Experience
+       ↓
+Replay Memory
+       ↓
+DQN Training
+       ↓
+Epsilon Decay
+       ↓
+Better Bidding Decisions
+📁 Project Structure
+RL_AD/
+│
+├── dashboard.py
+│   └── Main Streamlit dashboard
+│
+├── engine/
+│   ├── __init__.py
+│   ├── agent.py
+│   │   └── DQN neural network and agent
+│   │
+│   └── environment.py
+│       └── Reinforcement learning environment
+│
+├── outputs/
+│   └── campaign.jpg
+│       └── Active advertising campaign image
+│
+├── .gitignore
 ├── requirements.txt
-├── data/                    # Generated / Criteo TSV files
-├── models/                  # Saved model .pkl files
-└── outputs/                 # Evaluation plots + auction results
-```
+└── README.md
 
----
+Generated files such as trained model files and runtime .pkl files are excluded using .gitignore.
 
-## 🚀 Quick Start
+🖥️ Streamlit Dashboard
 
-### 1. Install dependencies
-```bash
-cd ad_bidding_system
+The project includes a futuristic interactive dashboard built using Streamlit.
+
+Dashboard Sections
+Section	Description
+⚡ Global Metrics	Revenue, ROI, CTR, reward and epsilon
+🎯 Active Campaign	Displays the current advertising campaign
+🧠 DQN Console	Training status and model information
+📈 Reward Graph	Tracks reward during training
+📉 Epsilon Decay	Shows exploration reduction
+🎯 CTR Trend	Tracks click-through performance
+🏷️ Live Auction	Simulates real-time bidding
+📡 Auction Feed	Displays recent auction events
+📊 Performance Trends	Visualizes training and auction performance
+🧠 Model Intelligence	Displays DQN learning information
+👥 Bidder Analytics	Compares simulated bidder performance
+▶️ Quick Start
+1. Clone the Repository
+git clone <your-github-repository-url>
+cd RL_AD
+2. Create a Virtual Environment
+python -m venv .venv
+3. Activate the Virtual Environment
+
+For Windows PowerShell:
+
+.venv\Scripts\Activate.ps1
+4. Install Dependencies
 pip install -r requirements.txt
-```
-
-### 2. Run the full pipeline (simulated data)
-```bash
-python main.py --rows 100000 --auctions 2000
-```
-
-### 3. Launch the dashboard
-```bash
+5. Run the Dashboard
 streamlit run dashboard.py
-```
 
----
+The Streamlit dashboard will open in your browser.
 
-## 📦 Using Real Criteo Data
+💾 Model Saving and Loading
 
-1. Register and download from:
-   https://ailab.criteo.com/download-criteo-1tb-click-logs-dataset/
+The dashboard provides options to save and load the trained DQN model.
 
-2. Unzip one day file (e.g. `day_0.gz → day_0.tsv`)
+A trained PyTorch model can be saved locally as:
 
-3. Run with real data:
-```bash
-python main.py --criteo path/to/day_0.tsv --rows 500000
-```
+ad_agent.pth
 
-The Criteo TSV format is:
-```
-label<TAB>I1 I2 ... I13<TAB>C1 C2 ... C26
-```
-No header. Integer features may be empty (NaN). Categorical features are hex hashes.
+Model files are excluded from GitHub using .gitignore.
 
----
+📊 Performance Metrics
 
-## 🧠 Models
+The dashboard monitors several important RTB and reinforcement learning metrics:
 
-| Model              | Description                                   |
-|--------------------|-----------------------------------------------|
-| Logistic Regression| Fast linear baseline, well-calibrated         |
-| Decision Tree      | Interpretable, depth-8                        |
-| Random Forest      | 100 trees, robust to noise                    |
-| **LightGBM**       | **Best performer** — gradient boosted trees   |
+Revenue
+ROI
+CTR (Click-Through Rate)
+Total Reward
+Bid Amount
+Auction Win Rate
+Training Loss
+Epsilon
+Bidder Performance
 
-Key metric: **AUC-ROC** (ranking quality for bid ordering)
-Secondary: **Log-Loss** (calibration quality → accurate bid values)
+These metrics help evaluate how the agent behaves during training and simulated auctions.
 
----
+🔄 Training Workflow
+Initialize Environment
+        │
+        ▼
+Initialize DQN Agent
+        │
+        ▼
+Observe State
+        │
+        ▼
+Select Bid Action
+        │
+        ▼
+Execute Auction
+        │
+        ▼
+Receive Reward
+        │
+        ▼
+Store Experience
+        │
+        ▼
+Sample Replay Batch
+        │
+        ▼
+Train DQN
+        │
+        ▼
+Decay Epsilon
+        │
+        ▼
+Repeat
+🛠️ Technologies Used
+Technology	Purpose
+Python	Core development
+PyTorch	DQN and neural network
+Streamlit	Interactive dashboard
+Plotly	Data visualization
+NumPy	Numerical computation
+Reinforcement Learning	Adaptive bidding
+Git & GitHub	Version control
+🎯 Project Objective
 
-## 💰 Bidding Strategies
+Traditional advertising systems often rely on predefined bidding rules.
 
-| Strategy          | Formula                        | Best For               |
-|-------------------|-------------------------------|------------------------|
-| FixedBidder       | `bid = const`                 | Baseline comparison    |
-| CTRBidder         | `bid = base_cpm × pCTR`       | Awareness campaigns    |
-| **ValueBidder**   | `bid = pCTR × pConv × value`  | **Conversion goals**   |
-| PacingBidder      | ValueBidder + budget pacing   | Budget-constrained     |
-| ThresholdBidder   | Skip if pCTR < threshold      | Quality-focused        |
+This project explores how Reinforcement Learning can learn bidding decisions dynamically from auction feedback.
 
-Auction type: **Second-price (Vickrey)** — winner pays the 2nd-highest bid.
+The DQN agent continuously interacts with the simulated advertising environment and learns which bidding actions can produce better rewards.
 
----
+The project combines:
 
-## 📊 Evaluation Metrics
+Artificial Intelligence + Reinforcement Learning + Real-Time Bidding + Data Visualization
 
-- **AUC-ROC**: Overall ranking quality
-- **AUC-PR**: Precision-Recall (better for imbalanced CTR data)
-- **Log-Loss**: Calibration (directly impacts bid accuracy)
-- **Lift@10%**: How much better than random in top-scored impressions
-- **CTR / CVR**: Click-through and conversion rates
-- **CPC**: Cost per click (bidder efficiency)
+🔮 Future Improvements
+Integration with larger real-world advertising datasets
+More advanced user personalization
+Budget-aware bidding
+Multi-agent reinforcement learning
+Contextual bandit comparison
+Advanced auction mechanisms
+Online model updating
+REST API deployment
+Cloud deployment
+Real-time advertising data integration
+📄 License
 
----
-
-## 🖥️ Dashboard Pages
-
-| Page                  | Content                                                |
-|-----------------------|--------------------------------------------------------|
-| 🏠 Overview           | KPI cards, pCTR histogram, clearing price dist        |
-| 🧠 Models             | ROC/PR curves, calibration, metrics table              |
-| 👤 User Personalization| Interactive profile builder, CTR heatmap             |
-| 🏷️ Live Auction       | Real-time auction simulation, auction feed             |
-| 📊 Bidder Analytics   | Per-bidder CTR, spend, efficiency scatter             |
-
----
-
-## 🔧 CLI Options
-
-```
-python main.py [OPTIONS]
-
-  --rows INT       Simulated rows (default: 100000)
-  --criteo PATH    Path to Criteo TSV file
-  --skip-train     Load saved models, skip retraining
-  --auctions INT   Number of simulated auctions (default: 2000)
-  --out DIR        Output directory (default: outputs/)
-```
-
----
-
-## 📐 Feature Engineering Details
-
-### Integer features (I1–I13)
-- Log1p transform → StandardScaler
-- Median imputation for NaN
-
-### Categorical features (C1–C26)
-- Top-50 vocab per column (Criteo-style hash clipping)
-- LabelEncoder → normalized to [0, 1]
-
-### Interaction features (engineered)
-- `position × device`
-- `time_on_site × past_conversions`
-- `frequency × recency` (fatigue signal)
-- `price_bucket × ads_seen`
-
----
-
-## 📄 License
-MIT
+MIT License

@@ -1,6 +1,3 @@
-Create a file named `README.md` in VS Code and paste the block below into it:
-
-```markdown
 # ⚡ Personalized AI Ad Bidding System
 
 ![Python](https://img.shields.io/badge/Python-3.10%2B-blue?logo=python)

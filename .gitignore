@@ -36,3 +36,6 @@ Thumbs.db
 
 # Python version files
 .python-version
+
+# Generated dashboard state
+outputs/*.pkl
